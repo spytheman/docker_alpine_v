@@ -2,23 +2,17 @@ FROM alpine:3.10
 
 LABEL maintainer="Delyan Angelov <delyan@bulsynt.org>"
 
-ENV VVV /opt/vlang
-ENV PATH $VVV:$PATH
+WORKDIR /opt/vlang
 
-RUN mkdir -p $VVV
+ENV VVV  /opt/vlang
+ENV PATH /opt/vlang:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-WORKDIR $VVV
+RUN mkdir -p /opt/vlang && ln -s /opt/vlang/v /usr/bin/v
 
 RUN apk --update --no-cache  add  --virtual vvvdeps \
-             git make upx gcc \
-             musl-dev \
-             openssl-dev sqlite-dev \
-             libx11-dev glfw-dev freetype-dev
-             
-RUN ln -s $VVV/v /usr/bin/v
+  git make upx gcc \
+  musl-dev \
+  openssl-dev sqlite-dev \
+  libx11-dev glfw-dev freetype-dev
 
 ONBUILD COPY . .
-
-CMD ["make", "all", "selfcompile"]
-CMD ["/opt/vlang/v", "--version"]
-CMD ["/opt/vlang/v", "test", "v"]
