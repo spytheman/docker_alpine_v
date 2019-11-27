@@ -4,12 +4,21 @@ LABEL maintainer="Delyan Angelov <delyan@bulsynt.org>"
 
 ENV VVV /opt/vlang
 ENV PATH $VVV:$PATH
+
+RUN mkdir -p $VVV
+
 WORKDIR $VVV
 
-RUN apk add git make upx gcc musl-dev openssl-dev sqlite-dev libx11-dev glfw-dev freetype-dev
+RUN apk --update --no-cache  add  --virtual vvvdeps \
+             git make upx gcc \
+             musl-dev \
+             openssl-dev sqlite-dev \
+             libx11-dev glfw-dev freetype-dev
+             
+RUN ln -s $VVV/v /usr/bin/v
 
-RUN ln -s $VVV/v /usr/local/bin/v
+ONBUILD COPY . .
 
-COPY entrypoint.sh /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["make", "all", "selfcompile"]
+CMD ["/opt/vlang/v", "--version"]
+CMD ["/opt/vlang/v", "test", "v"]
