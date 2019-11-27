@@ -1,12 +1,11 @@
-name: 'Container Action Template'
-description: 'Get started with Container actions'
-author: 'GitHub'
+name: 'A prebuild Alpine Vlang testing container'
+description: 'This Alpine container allows for building and testing V in a Docker environment'
+author: 'Delyan Angelov <delyan@bulsynt.org>'
 inputs: 
-  myInput:
-    description: 'Input to use'
-    default: 'world'
+  params:
+    description: 'The parameters of the entrypoint executable'
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.myInput }}
+    - ${{ inputs.params }}
